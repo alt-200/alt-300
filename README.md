@@ -210,8 +210,7 @@ ip -c -br a
 apt-get update && apt-get install frr -y
 ```
 ```bash
-vim /etc/frr/daemons
-ospfd=yes
+sed -i 's/ospfd=no/ospfd=yes' /etc/frr/daemons
 ```
 ```bash
 systemctl enable --now frr
