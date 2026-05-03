@@ -154,7 +154,7 @@ sysctl -p
 systemctl restart network
 ```
 ```bash
-apt-get update && apt-get install -y iptables tzdata 
+apt-get update && apt-get install -y iptables tzdata sudo frr 
 
 iptables -t nat -A POSTROUTING -o enp7s1 -s 192.168.100.0/27 -j MASQUERADE
 iptables -t nat -A POSTROUTING -o enp7s1 -s 192.168.200.64/28 -j MASQUERADE
@@ -170,9 +170,6 @@ systemctl restart iptables
 ```
 ```bash
 timedatectl set-timezone Asia/Yekaterinburg
-```
-```bash
-apt-get update && apt-get install sudo -y
 ```
 ```bash
 useradd net_admin
@@ -205,9 +202,6 @@ echo "10.10.0.1/25" > /etc/net/ifaces/gre1/ipv4address
 ```bash
 systemctl restart network
 ip -c -br a
-```
-```bash
-apt-get update && apt-get install frr -y
 ```
 ```bash
 sed -i 's/ospfd=no/ospfd=yes' /etc/frr/daemons
@@ -353,7 +347,7 @@ vim /etc/sudoers
 sshuser ALL=(ALL) NOPASSWD: ALL
 ```
 ```bash
-apt-get update && apt-get install openssh-server -y
+apt-get update && apt-get install -y openssh-server nano
 ```
 ```bash
 cat > /etc/openssh/sshd_config << EOF
@@ -374,9 +368,6 @@ systemctl status sshd
 ```
 ```bash
 ssh sshuser@localhost -p 2026
-```
-```bash
-apt-get update && apt-get install bind nano -y
 ```
 ```bash
 nano /etc/bind/options.conf
@@ -488,7 +479,7 @@ dhcpcd
 ```bash
 ip -c -br a
 ```
-BR-RTR
+# BR-RTR
 ```bash
 mkdir /etc/net/ifaces/enp7s2/
 ```
@@ -527,7 +518,7 @@ sysctl -p
 systemctl restart network
 ```
 ```bash
-apt-get update && apt-get install -y tzdata iptables 
+apt-get update && apt-get install -y tzdata iptables sudo frr 
 ```
 ```bash
 iptables -t nat -A POSTROUTING -o enp7s1 -s 192.168.3.0/28 -j MASQUERADE
@@ -543,20 +534,14 @@ systemctl status iptables
 iptables -t nat -L -n -v
 ```
 ```bash
-apt-get update && apt-get install sudo -y
-```
-```bash
 useradd net_admin
 passwd net_admin 
 ```
 ```bash
 usermod -a -G wheel net_admin
 ```
-```bash
-vim /etc/sudoers
-## Same thing without a password
-# WHEEL_USERS ALL=(ALL:ALL) NOPASSWD: ALL
-net_admin ALL=(ALL) NOPASSWD: ALL
+```bash 
+echo > "net_admin ALL=(ALL) NOPASSWD: ALL" /etc/sudoers
 ```
 ```bash
 mkdir /etc/net/ifaces/gre1
@@ -578,11 +563,7 @@ systemctl restart network
 ip -c -br a
 ```
 ```bash
-apt-get update && apt-get install frr -y
-```
-```bash
-vim /etc/frr/daemons
-ospfd=yes
+sed -i 's/ospfd=no/ospfd=yes' /etc/frr/daemons
 ```
 ```bash
 systemctl enable --now frr
@@ -622,7 +603,7 @@ nameserver 192.168.100.2
 ```bash
 systemctl restart network
 ```
-BR-SRV
+# BR-SRV
 ```bash
 hostnamectl set-hostname br-srv.au-team.irpo; exec bash
 ```
