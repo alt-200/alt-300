@@ -29,13 +29,6 @@ systemctl restart network
 ```bash
 ip -c -br a
 ```
-Должен быть такой вывод:
-```bash
-lo               UNKNOWN        127.0.0.1/8 ::1/128 
-enp7s1           UP             192.168.120.157/24 fe80::be24:11ff:fe74:fa7/64 
-enp7s2           UP             172.16.1.1/28 fe80::be24:11ff:fed1:a8dc/64 
-enp7s3           UP             172.16.2.1/28 fe80::be24:11ff:fed6:e399/64
-```
 ```bash
 sed -i 's/net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/' /etc/net/sysctl.conf
 ```
@@ -136,15 +129,6 @@ systemctl restart network
 ```
 ```bash
 ip -c -br a
-```
-Должен быть такой вывод:
-```bash
-lo               UNKNOWN        127.0.0.1/8 ::1/128 
-enp7s1           UP             172.16.1.2/28 fe80::be24:11ff:feda:daba/64 
-enp7s2           UP             fe80::be24:11ff:feae:ad50/64 
-enp7s2.100@enp7s2 UP             192.168.100.1/27 fe80::be24:11ff:feae:ad50/64 
-enp7s2.200@enp7s2 UP             192.168.200.65/28 fe80::be24:11ff:feae:ad50/64 
-enp7s2.999@enp7s2 UP             192.168.99.89/29 fe80::be24:11ff:feae:ad50/64
 ```
 ```bash
 sed -i 's/net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/' /etc/net/sysctl.conf
@@ -319,12 +303,7 @@ echo "nameserver 9.9.9.9" > /etc/net/ifaces/enp7s1/resolv.conf
 systemctl restart network
 ```
 ```bash
-ip -c -br a
-```
-Должен быть такой вывод:
-```bash
-lo               UNKNOWN        127.0.0.1/8 ::1/128 
-enp7s1           UP             192.168.100.2/25 fe80::be24:11ff:fef0:121/64 
+ip -c -br a 
 ```
 ```bash
 timedatectl set-timezone Asia/Yekaterinburg
