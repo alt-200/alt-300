@@ -179,10 +179,7 @@ passwd net_admin
 usermod -a -G wheel net_admin
 ```
 ```bash
-vim /etc/sudoers
-## Same thing without a password
-# WHEEL_USERS ALL=(ALL:ALL) NOPASSWD: ALL
-net_admin ALL=(ALL) NOPASSWD: ALL
+echo "net_admin ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 ```
 ```bash
 mkdir /etc/net/ifaces/gre1
@@ -293,8 +290,7 @@ systemctl restart dhcpd
 systemctl status dhcpd
 ```
 ```bash
-vim /etc/net/ifaces/enp7s1/resolv.conf
-nameserver 192.168.100.2
+sed -i 's/nameserver 9.9.9.9/nameserver 192.168.100.2' /etc/net/ifaces/enp7s1/resolv.conf
 ```
 ```bash
 systemctl restart network
@@ -341,10 +337,7 @@ passwd sshuser
 usermod -a -G wheel sshuser
 ```
 ```bash
-vim /etc/sudoers
-## Same thing without a password
-# WHEEL_USERS ALL=(ALL:ALL) NOPASSWD: ALL
-sshuser ALL=(ALL) NOPASSWD: ALL
+echo "sshuser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 ```
 ```bash
 apt-get update && apt-get install -y openssh-server nano
@@ -370,11 +363,7 @@ systemctl status sshd
 ssh sshuser@localhost -p 2026
 ```
 ```bash
-nano /etc/bind/options.conf
-listen-on { any; };
-forward first;
-forwarders {9.9.9.9; };
-allow-query { any; };
+sed -i 's/old/listen-on { any; };' -e 's/old/forward first;' -e 's/forwarders {9.9.9.9; };' -e 's/old/allow-query { any; };' /etc/bind/options.conf
 ```
 ```bash
 nano /etc/bind/local.conf
@@ -600,8 +589,7 @@ show run
 br-rtr.au-team.irpo# show ip ospf neighbor
 ```
 ```bash
-vim /etc/net/ifaces/enp7s1/resolv.conf
-nameserver 192.168.100.2
+sed -i 's/nameserver 9.9.9.9/nameserver 192.168.100.2' /etc/net/ifaces/enp7s1/resolv.conf
 ```
 ```bash
 systemctl restart network
@@ -638,10 +626,7 @@ passwd sshuser
 usermod -a -G wheel sshuser
 ```
 ```bash
-vim /etc/sudoers
-## Same thing without a password
-# WHEEL_USERS ALL=(ALL:ALL) NOPASSWD: ALL
-sshuser ALL=(ALL) NOPASSWD: ALL
+echo "sshuser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 ```
 ```bash
 apt-get update && apt-get install openssh-server -y
@@ -664,8 +649,7 @@ systemctl restart sshd
 systemctl status sshd
 ```
 ```bash
-vim /etc/net/ifaces/enp7s1/resolv.conf
-nameserver 192.168.100.2
+sed -i 's/nameserver 9.9.9.9/nameserver 192.168.100.2' /etc/net/ifaces/enp7s1/resolv.conf
 ```
 ```bash
 systemctl restart network
