@@ -29,11 +29,10 @@ password
 Серверы
 ```bash
 DHSP-сервер
-Начальный ip адрес:192.168.20.10
+Начальный ip адрес:192.168.20.10          #Важны последние цифры ip адреса 10-30 например
 Конечный ip адрес:192.168.20.20
-DNS-сервер:192.168.20.2
-Домен поиска:8.8.8.8
-Шлюз по умолчанию:192.168.20.2
+DNS-сервер:8.8.8.8
+Шлюз по умолчанию:192.168.20.1       #пример ip роутера
 Применить
 ```
 Брандмауэр
@@ -61,15 +60,10 @@ user:1111
 ip -c -br a
 ```
 ```bash
-echo "default via 172.16.1.1" > /etc/net/ifaces/ens33/ipv4route 
+nano /etc/resolv.conf
+nameserver 8.8.8.8
 ```
 ```bash
-nano /etc/net/ifaces/ens33/resolv.conf
-name_server=127.0.0.1
-name_server=192.168.0.0-Начальный ip адрес DHCP
-```
-```bash
-resolvconf -u
 systemctl restart network
 ```
 Проверка
@@ -77,17 +71,3 @@ systemctl restart network
 ping <ip>                        #ALT-NET
 ping 8.8.8.8
 apt-get update
-```
-```bash
-```
-```bash
-```
-```bash
-```
-```bash
-```
-```bash
-```
-```bash
-```
-```bash
