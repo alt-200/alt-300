@@ -19,7 +19,7 @@ systemctl enable --now ahttpd
 ```bash
 apt-get install alterator-dhcp alterator-bind alterator-net-iptables -y
 ```
-если насиройки ALT SERVER не сработали задаем ip адрес ens34
+Если настройки ALT SERVER не сработали задаем ip адрес ens34
 ```bash
 nano /etc/net/ifaces/ens34/ipv4address
 192.168.20.1/24
