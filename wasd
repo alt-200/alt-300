@@ -24,7 +24,13 @@ systemctl enable --now ahttpd
 ```bash
 apt-get install alterator-dhcp alterator-bind alterator-net-iptables -y
 ```
+если насиройки ALT SERVER не сработали задаем ip адрес ens34
 ```bash
+nano /etc/net/ifaces/ens34/ipv4address
+192.168.20.1/24
+```
+```bash
+systemctl restart network
 reboot
 ```
 ```bash
@@ -37,8 +43,8 @@ password
 DHSP-сервер включить
 Начальный ip адрес:192.168.20.10          #Важны последние цифры ip адреса 10-30 например
 Конечный ip адрес:192.168.20.20
-DNS-сервер:8.8.8.8
-Шлюз по умолчанию:192.168.20.1       #пример ip роутера
+Домен поиск имен:8.8.8.8
+Шлюз по умолчанию:192.168.1.40      #пример ip роутера
 Применить
 ```
 Брандмауэр
