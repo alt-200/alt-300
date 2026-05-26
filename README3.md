@@ -6,6 +6,9 @@ rpm [p11] http://192.168.1.150/p11/branch/x86_64_classic
 rpm [p11] http://192.168.1.150/p11/branch/noarch classic
 ```
 # ALT-NET
+```
+```bash
+apt-get update && apt-get dist-upgrade && apt-get install ahttpd alterator alterator fbi alterator-dhcp alterator-bind alterator-net-iptables -y
 ```bash
 apt-get update && apt-get dist-upgrade -y
 ```
