@@ -18,6 +18,7 @@ apt-get install lamp-server -y
 ```bash
 systemctl enable --now httpd2
 systemctl enable --now mariadb
+systemctl enable --now mysqld
 ```
 ```bash
 mysql_secure_installation
