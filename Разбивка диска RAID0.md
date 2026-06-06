@@ -68,4 +68,4 @@ mount -all
 ```bash
 mdadm --detail /dev/md0
 ```
-```bash
+
