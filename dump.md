@@ -62,7 +62,7 @@ chown -R apache2:webmaster /var/www/html/
 chmod 755 /var/www/html/
 ```
 ```bash
-nano /var/www/html/index.php
+vim /var/www/html/index.php
 $username = "fish";
 $password = "123";
 $dbname = "shark";
