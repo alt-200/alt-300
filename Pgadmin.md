@@ -57,11 +57,8 @@ sample_password
 Задаем имя wasd
 ```
 localhost
-```
 postgres
-```
 PHP
-```
 3
 ```
 
