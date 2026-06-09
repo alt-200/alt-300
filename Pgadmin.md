@@ -40,10 +40,10 @@ systemctl restart httpd2
 ```bash
 apt-get install pgadmin4 -y
 ```
+nano /usr/lib/pgadmin4/config.py   #если что-то пойдет не так
 ```bash
-nano /usr/lib/pgadmin4/config.py
-CONFIG_DATABASE_URI = 'postgresql://PHP:3@127.0.0.1:5432/phpdb'
-DEFAULT_SERVER = '0.0.0.0'
+sed -i "s/DEFAULT_SERVER = '127.0.0.1'/DEFAULT_SERVER = '0.0.0.0'/g" /usr/lib/pgadmin4/config.py
+sed -i "s|CONFIG_DATABASE_URI *= *''|CONFIG_DATABASE_URI = 'postgresql://PHP:3@127.0.0.1:5432/phpdb'|g" /usr/lib/pgadmin4/config.py
 ```
 ```bash
 systemctl restart pgadmin4
