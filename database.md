@@ -6,6 +6,6 @@ SELECT "ФИО" FROM "Коллекционеры";
 SELECT * FROM "предметы коллекции";
 ```
 ```bash
-SELECT "ФИО" FROM "Коллекционеры";
+SELECT DISTINCT код книги FROM выдача;
 ```
 
