@@ -185,17 +185,19 @@ echo "10.10.10.1/30" > /etc/net/ifaces/gre1/ipv4address
 ```
 
 ```bash
-sed -i 's/net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/' /etc/net/sysctl.conf
+vim /etc/net/sysctl.conf
 ```
-
 ```bash
-sysctl -p 
+cat > /etc/NetworkManager/conf.d/unmanaged.conf << EOF
+[keyfile]
+unmanaged-devices=interface-name:ens1;interface-name:ens2
+EOF
 ```
-
 ```bash
+sysctl -p
+systemctl restart NetworkManager
 systemctl restart network
 ```
-
 ```bash
 useradd -m -s /bin/bash net_admin
 ```
