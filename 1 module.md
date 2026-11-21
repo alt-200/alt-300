@@ -9,10 +9,6 @@ timedatectl set-timezone Asia/Yekaterinburg
 ```
 
 ```bash
-rm -rf /etc/net/ifaces/ens1
-```
-
-```bash
 mkdir -p /etc/net/ifaces/ens2 /etc/net/ifaces/ens3
 ```
 
@@ -45,11 +41,11 @@ echo "172.16.2.1/28" > /etc/net/ifaces/ens3/ipv4address
 ```
 
 ```bash
-sed -i 's/net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/' /etc/net/sysctl.conf
+vim /etc/net/sysctl.conf
 ```
 
 ```bash
-sysctl -p /etc/net/sysctl.conf
+sysctl -p 
 ```
 
 ```bash
@@ -58,14 +54,6 @@ systemctl restart network
 
 ```bash
 apt-get update && apt-get install -y iptables tzdata
-```
-
-```bash
-iptables -F
-```
-
-```bash
-iptables -t nat -F
 ```
 
 ```bash
@@ -218,7 +206,7 @@ sed -i 's/net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/' /etc/net/sysctl.conf
 ```
 
 ```bash
-sysctl -p /etc/net/sysctl.conf
+sysctl -p 
 ```
 
 ```bash
@@ -247,14 +235,6 @@ chmod 440 /etc/sudoers.d/net_admin
 
 ```bash
 apt-get update && apt-get install -y iptables tzdata sudo frr dhcp-server nano
-```
-
-```bash
-iptables -F
-```
-
-```bash
-iptables -t nat -F
 ```
 
 ```bash
@@ -396,10 +376,6 @@ echo "default via 192.168.100.1" > /etc/net/ifaces/ens1/ipv4route
 
 ```bash
 echo "nameserver 77.88.8.7" > /etc/net/ifaces/ens1/resolv.conf
-```
-
-```bash
-ip link set ens1 up
 ```
 
 ```bash
