@@ -362,8 +362,14 @@ echo "default via 192.168.100.1" > /etc/net/ifaces/ens1/ipv4route
 ```bash
 echo "nameserver 77.88.8.7" > /etc/net/ifaces/ens1/resolv.conf
 ```
-
 ```bash
+cat > /etc/NetworkManager/conf.d/unmanaged.conf << EOF
+[keyfile]
+unmanaged-devices=interface-name:ens1
+EOF
+```
+```bash
+systemctl restart NetworkManager
 systemctl restart network
 ```
 
