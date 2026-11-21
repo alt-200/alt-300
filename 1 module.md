@@ -38,9 +38,6 @@ cat > /etc/NetworkManager/conf.d/unmanaged.conf << EOF
 unmanaged-devices=interface-name:ens2;interface-name:ens3
 EOF
 ```
-```bash
-systemctl restart NetworkManager
-```
 
 ```bash
 echo "172.16.1.1/28" > /etc/net/ifaces/ens2/ipv4address
@@ -52,11 +49,9 @@ vim /etc/net/sysctl.conf
 ```
 
 ```bash
-sysctl -p 
-```
-
-```bash
+sysctl -p
 systemctl restart network
+systemctl restart NetworkManager
 ```
 
 ```bash
@@ -65,33 +60,14 @@ apt-get update && apt-get install -y iptables tzdata
 
 ```bash
 iptables -t nat -A POSTROUTING -o ens1 -s 172.16.1.0/28 -j MASQUERADE
-```
-
-```bash
 iptables -t nat -A POSTROUTING -o ens1 -s 172.16.2.0/28 -j MASQUERADE
-```
-
-```bash
 iptables -A FORWARD -i ens2 -o ens1 -s 172.16.1.0/28 -j ACCEPT
-```
-
-```bash
 iptables -A FORWARD -i ens3 -o ens1 -s 172.16.2.0/28 -j ACCEPT
-```
-
-```bash
 iptables -A FORWARD -s 172.16.0.0/16 -d 172.16.0.0/16 -j ACCEPT
-```
-
-```bash
 iptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
-```
 
-```bash
 iptables-save > /etc/sysconfig/iptables
-```
 
-```bash
 systemctl enable --now iptables
 ```
 
