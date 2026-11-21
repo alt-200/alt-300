@@ -23,10 +23,6 @@ EOF
 ```
 
 ```bash
-echo "172.16.1.1/28" > /etc/net/ifaces/ens2/ipv4address
-```
-
-```bash
 cat > /etc/net/ifaces/ens3/options << EOF
 BOOTPROTO=static
 TYPE=eth
@@ -37,6 +33,17 @@ EOF
 ```
 
 ```bash
+cat > /etc/NetworkManager/conf.d/unmanaged.conf << EOF
+[keyfile]
+unmanaged-devices=interface-name:ens2;interface-name:ens3
+EOF
+```
+```bash
+systemctl restart NetworkManager
+```
+
+```bash
+echo "172.16.1.1/28" > /etc/net/ifaces/ens2/ipv4address
 echo "172.16.2.1/28" > /etc/net/ifaces/ens3/ipv4address
 ```
 
