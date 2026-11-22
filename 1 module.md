@@ -734,6 +734,33 @@ vtysh -c "conf t" \
  -c "exit" \
  -c "exit" \
  -c "wr"
+
+
+
+
+sed -i 's/ospfd=no/ospfd=yes/' /etc/frr/daemons
+systemctl enable --now frr
+systemctl restart frr
+
+vtysh -c "conf t" \
+ -c "router ospf" \
+ -c "ospf router-id 2.2.2.2" \
+ -c "network 10.10.10.0/30 area 0" \
+ -c "network 192.168.3.16/30 area 0" \
+ -c "passive-interface default" \
+ -c "no passive-interface gre1" \
+ -c "no passive-interface ens4" \
+ -c "exit" \
+ -c "interface gre1" \
+ -c "ip ospf authentication message-digest" \
+ -c "ip ospf message-digest-key 1 md5 P@ssw0rd" \
+ -c "exit" \
+ -c "exit" \
+ -c "wr"
+
+vtysh -c "show ip ospf neighbor"
+vtysh -c "show ip route ospf"
+
 ```
 
 ```bash
@@ -841,6 +868,24 @@ vtysh -c "conf t" \
  -c "exit" \
  -c "exit" \
  -c "wr"
+
+
+sed -i 's/ospfd=no/ospfd=yes/' /etc/frr/daemons
+systemctl enable --now frr
+systemctl restart frr
+vtysh -c "conf t" \
+ -c "router ospf" \
+ -c "ospf router-id 3.3.3.3" \
+ -c "network 192.168.3.16/30 area 0" \
+ -c "network 192.168.3.0/28 area 0" \
+ -c "passive-interface default" \
+ -c "no passive-interface ens1" \
+ -c "exit" \
+ -c "exit" \
+ -c "wr"
+vtysh -c "show ip ospf neighbor"
+vtysh -c "show ip route ospf"
+
 ```
 
 ```bash
