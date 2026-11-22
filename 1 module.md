@@ -744,3 +744,112 @@ sed -i 's/nameserver 77.88.8.7/nameserver 192.168.100.2/' /etc/net/ifaces/ens1/r
 systemctl restart network
 ```
 
+## BR-FW
+
+```bash
+hostnamectl set-hostname br-fw.au-team.irpo; exec bash
+```
+```bash
+timedatectl set-timezone Asia/Yekaterinburg
+```
+
+```bash
+cat > /etc/NetworkManager/conf.d/unmanaged.conf << EOF
+[keyfile]
+unmanaged-devices=interface-name:ens1;interface-name:ens5
+EOF
+systemctl disable --now NetworkManager dhcpcd 2>/dev/null || true
+systemctl mask NetworkManager dhcpcd 2>/dev/null || true
+systemctl restart network
+```
+
+```bash
+mkdir -p /etc/net/ifaces/ens1 /etc/net/ifaces/ens5
+```
+
+```bash
+cat > /etc/net/ifaces/ens1/options << EOF
+BOOTPROTO=static
+TYPE=eth
+DISABLED=no
+CONFIG_IPV4=yes
+NM_CONTROLLED=no
+EOF
+```
+
+```bash
+echo "192.168.3.18/30" > /etc/net/ifaces/ens1/ipv4address
+```
+
+```bash
+echo "default via 192.168.3.17" > /etc/net/ifaces/ens1/ipv4route
+```
+
+```bash
+echo "nameserver 77.88.8.7" > /etc/net/ifaces/ens1/resolv.conf
+```
+
+```bash
+cat > /etc/net/ifaces/ens5/options << EOF
+BOOTPROTO=static
+TYPE=eth
+DISABLED=no
+CONFIG_IPV4=yes
+NM_CONTROLLED=no
+EOF
+```
+
+```bash
+echo "192.168.3.1/28" > /etc/net/ifaces/ens5/ipv4address
+```
+
+```bash
+vim /etc/net/sysctl.conf
+```
+
+```bash
+sysctl -p 
+systemctl restart network
+```
+
+```bash
+apt-get update && apt-get install -y iptables tzdata frr nano
+```
+```bash
+iptables -A FORWARD -i ens5 -o ens1 -j ACCEPT
+iptables -A FORWARD -i ens1 -o ens5 -j ACCEPT
+iptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables-save > /etc/sysconfig/iptables
+systemctl enable --now iptables
+```
+```bash
+sed -i 's/ospfd=no/ospfd=yes/' /etc/frr/daemons
+```
+
+```bash
+systemctl enable --now frr
+```
+
+```bash
+vtysh -c "conf t" \
+ -c "router ospf" \
+ -c "ospf router-id 3.3.3.3" \
+ -c "network 192.168.3.16/30 area 0" \
+ -c "network 192.168.3.0/28 area 0" \
+ -c "passive-interface default" \
+ -c "no passive-interface ens1" \
+ -c "exit" \
+ -c "exit" \
+ -c "wr"
+```
+
+```bash
+sed -i 's/nameserver 77.88.8.7/nameserver 192.168.100.2/' /etc/net/ifaces/ens1/resolv.conf
+```
+
+```bash
+systemctl restart network
+```
+
+
+
