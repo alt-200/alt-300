@@ -850,6 +850,105 @@ sed -i 's/nameserver 77.88.8.7/nameserver 192.168.100.2/' /etc/net/ifaces/ens1/r
 ```bash
 systemctl restart network
 ```
+## BR-SRV
+
+```bash
+hostnamectl set-hostname br-srv.au-team.irpo; exec bash
+```
+
+```bash
+timedatectl set-timezone Asia/Yekaterinburg
+```
+
+```bash
+cat > /etc/NetworkManager/conf.d/unmanaged.conf << EOF
+[keyfile]
+unmanaged-devices=interface-name:ens5
+EOF
+```
+
+```bash
+mkdir -p /etc/net/ifaces/ens5
+```
+
+```bash
+cat > /etc/net/ifaces/ens5/options << EOF
+BOOTPROTO=static
+TYPE=eth
+DISABLED=no
+CONFIG_IPV4=yes
+NM_CONTROLLED=no
+EOF
+```
+
+```bash
+echo "192.168.3.2/28" > /etc/net/ifaces/ens5/ipv4address
+```
+
+```bash
+echo "default via 192.168.3.1" > /etc/net/ifaces/ens5/ipv4route
+```
+
+```bash
+echo "nameserver 77.88.8.7" > /etc/net/ifaces/ens5/resolv.conf
+```
+
+```bash
+systemctl restart network
+```
+
+```bash
+useradd sshuser -u 2027 -U -m -s /bin/bash
+```
+
+```bash
+echo "sshuser:P@ssw0rd" | chpasswd
+```
+
+```bash
+usermod -a -G wheel sshuser
+```
+
+```bash
+echo "sshuser ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/sshuser
+```
+
+```bash
+chmod 440 /etc/sudoers.d/sshuser
+```
+
+```bash
+apt-get update && apt-get install -y openssh-server tzdata nano
+```
+
+```bash
+cat > /etc/openssh/sshd_config << EOF
+Port 2027
+MaxAuthTries 2
+Banner /etc/openssh/sshd_banner
+AllowUsers sshuser
+EOF
+```
+
+```bash
+echo "Authorized access only" > /etc/openssh/sshd_banner
+```
+
+```bash
+systemctl enable --now sshd
+```
+
+```bash
+systemctl restart sshd
+```
+
+```bash
+sed -i 's/nameserver 77.88.8.7/nameserver 192.168.100.2/' /etc/net/ifaces/ens5/resolv.conf
+```
+
+```bash
+systemctl restart network
+```
 
 
 
