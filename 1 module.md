@@ -421,13 +421,15 @@ systemctl restart sshd
 ```bash
 cat > /etc/bind/options.conf << EOF
 options {
-    allow-recursion { any; };
+    options {
     directory "/etc/bind/zone";
     listen-on { 127.0.0.1; 192.168.100.2; };
     allow-query { any; };
-    allow-recursion { any; };
+    dnssec-validation no;
     forward first;
     forwarders { 77.88.8.7; 77.88.8.3; };
+};
+EOF
 };
 EOF
 ```
@@ -546,3 +548,14 @@ systemctl restart network
 ```
 
 ## HQ-CLI
+```bash
+hostnamectl set-hostname hq-cli.au-team.irpo; exec bash
+```
+
+```bash
+timedatectl set-timezone Asia/Yekaterinburg
+```
+```bash
+apt-get update && apt-get install dhcpcd
+dhcpcd
+```
