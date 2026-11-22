@@ -559,3 +559,188 @@ timedatectl set-timezone Asia/Yekaterinburg
 apt-get update && apt-get install dhcpcd
 dhcpcd
 ```
+## BR-RTR
+
+```bash
+hostnamectl set-hostname br-rtr.au-team.irpo; exec bash
+```
+
+```bash
+timedatectl set-timezone Asia/Yekaterinburg
+```
+
+```bash
+mkdir -p /etc/net/ifaces/ens1 /etc/net/ifaces/ens4
+```
+```bash
+cat > /etc/NetworkManager/conf.d/unmanaged.conf << EOF
+[keyfile]
+unmanaged-devices=interface-name:ens1;interface-name:ens4
+EOF
+```
+```bash
+cat > /etc/net/ifaces/ens1/options << EOF
+BOOTPROTO=static
+TYPE=eth
+DISABLED=no
+CONFIG_IPV4=yes
+NM_CONTROLLED=no
+EOF
+```
+
+```bash
+echo "172.16.2.2/28" > /etc/net/ifaces/ens1/ipv4address
+```
+
+```bash
+echo "default via 172.16.2.1" > /etc/net/ifaces/ens1/ipv4route
+```
+
+```bash
+echo "nameserver 77.88.8.7" > /etc/net/ifaces/ens1/resolv.conf
+```
+
+```bash
+cat > /etc/net/ifaces/ens4/options << EOF
+BOOTPROTO=static
+TYPE=eth
+DISABLED=no
+CONFIG_IPV4=yes
+NM_CONTROLLED=no
+EOF
+```
+
+```bash
+echo "192.168.3.17/30" > /etc/net/ifaces/ens4/ipv4address
+```
+
+```bash
+mkdir -p /etc/net/ifaces/gre1
+```
+
+```bash
+cat > /etc/net/ifaces/gre1/options << EOF
+TYPE=iptun
+TUNTYPE=gre
+TUNLOCAL=172.16.2.2
+TUNREMOTE=172.16.1.2
+TUNOPTIONS='ttl 64'
+DISABLED=no
+CONFIG_IPV4=yes
+EOF
+```
+
+```bash
+echo "10.10.10.2/30" > /etc/net/ifaces/gre1/ipv4address
+```
+
+```bash
+vim /etc/net/sysctl.conf
+```
+
+```bash
+sysctl -p /etc/net/sysctl.conf
+```
+
+```bash
+systemctl restart network
+```
+
+```bash
+useradd -m -s /bin/bash net_admin
+```
+
+```bash
+echo "net_admin:P@ssw0rd" | chpasswd
+```
+
+```bash
+usermod -a -G wheel net_admin
+```
+
+```bash
+echo "net_admin ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/net_admin
+```
+
+```bash
+chmod 440 /etc/sudoers.d/net_admin
+```
+
+```bash
+apt-get update && apt-get install -y tzdata iptables sudo frr nano
+```
+
+```bash
+iptables -F
+```
+
+```bash
+iptables -t nat -F
+```
+
+```bash
+iptables -t nat -A POSTROUTING -o ens1 -s 192.168.3.0/27 -j MASQUERADE
+```
+
+```bash
+iptables -A FORWARD -i ens4 -o ens1 -s 192.168.3.0/27 -j ACCEPT
+```
+
+```bash
+iptables -A FORWARD -s 192.168.0.0/16 -d 192.168.0.0/16 -j ACCEPT
+```
+
+```bash
+iptables -A FORWARD -s 10.10.10.0/30 -j ACCEPT
+```
+
+```bash
+iptables -A FORWARD -d 10.10.10.0/30 -j ACCEPT
+```
+
+```bash
+iptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
+```
+
+```bash
+iptables-save > /etc/sysconfig/iptables
+```
+
+```bash
+systemctl enable --now iptables
+```
+
+```bash
+sed -i 's/ospfd=no/ospfd=yes/' /etc/frr/daemons
+```
+
+```bash
+systemctl enable --now frr
+```
+
+```bash
+vtysh -c "conf t" \
+ -c "router ospf" \
+ -c "ospf router-id 2.2.2.2" \
+ -c "network 10.10.10.0/30 area 0" \
+ -c "network 192.168.3.16/30 area 0" \
+ -c "passive-interface default" \
+ -c "no passive-interface gre1" \
+ -c "no passive-interface ens4" \
+ -c "exit" \
+ -c "interface gre1" \
+ -c "ip ospf authentication message-digest" \
+ -c "ip ospf message-digest-key 1 md5 P@ssw0rd" \
+ -c "exit" \
+ -c "exit" \
+ -c "wr"
+```
+
+```bash
+sed -i 's/nameserver 77.88.8.7/nameserver 192.168.100.2/' /etc/net/ifaces/ens1/resolv.conf
+```
+
+```bash
+systemctl restart network
+```
+
