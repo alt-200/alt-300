@@ -429,8 +429,6 @@ options {
     forwarders { 77.88.8.7; 77.88.8.3; };
 };
 EOF
-};
-EOF
 ```
 
 ```bash
