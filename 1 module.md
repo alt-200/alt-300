@@ -421,7 +421,6 @@ systemctl restart sshd
 ```bash
 cat > /etc/bind/options.conf << EOF
 options {
-    options {
     directory "/etc/bind/zone";
     listen-on { 127.0.0.1; 192.168.100.2; };
     allow-query { any; };
