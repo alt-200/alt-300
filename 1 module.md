@@ -190,7 +190,7 @@ vim /etc/net/sysctl.conf
 ```bash
 cat > /etc/NetworkManager/conf.d/unmanaged.conf << EOF
 [keyfile]
-unmanaged-devices=interface-name:ens1;interface-name:ens2
+unmanaged-devices=interface-name:ens1;interface-name:ens2;interface-name:ens2.100;interface-name:ens2.200;interface-name:ens2.999;interface-name:gre1
 EOF
 ```
 ```bash
