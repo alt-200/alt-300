@@ -669,42 +669,13 @@ apt-get update && apt-get install -y tzdata iptables sudo frr nano
 ```
 
 ```bash
-iptables -F
-```
-
-```bash
-iptables -t nat -F
-```
-
-```bash
 iptables -t nat -A POSTROUTING -o ens1 -s 192.168.3.0/27 -j MASQUERADE
-```
-
-```bash
 iptables -A FORWARD -i ens4 -o ens1 -s 192.168.3.0/27 -j ACCEPT
-```
-
-```bash
 iptables -A FORWARD -s 192.168.0.0/16 -d 192.168.0.0/16 -j ACCEPT
-```
-
-```bash
 iptables -A FORWARD -s 10.10.10.0/30 -j ACCEPT
-```
-
-```bash
 iptables -A FORWARD -d 10.10.10.0/30 -j ACCEPT
-```
-
-```bash
 iptables -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
-```
-
-```bash
 iptables-save > /etc/sysconfig/iptables
-```
-
-```bash
 systemctl enable --now iptables
 ```
 
@@ -760,9 +731,6 @@ cat > /etc/NetworkManager/conf.d/unmanaged.conf << EOF
 [keyfile]
 unmanaged-devices=interface-name:ens1;interface-name:ens5
 EOF
-systemctl disable --now NetworkManager dhcpcd 2>/dev/null || true
-systemctl mask NetworkManager dhcpcd 2>/dev/null || true
-systemctl restart network
 ```
 
 ```bash
@@ -833,18 +801,6 @@ systemctl enable --now frr
 ```
 
 ```bash
-vtysh -c "conf t" \
- -c "router ospf" \
- -c "ospf router-id 3.3.3.3" \
- -c "network 192.168.3.16/30 area 0" \
- -c "network 192.168.3.0/28 area 0" \
- -c "passive-interface default" \
- -c "no passive-interface ens1" \
- -c "exit" \
- -c "exit" \
- -c "wr"
-
-
 sed -i 's/ospfd=no/ospfd=yes/' /etc/frr/daemons
 systemctl enable --now frr
 systemctl restart frr
