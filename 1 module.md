@@ -276,6 +276,7 @@ sed -i 's/ospfd=no/ospfd=yes/' /etc/frr/daemons
 
 ```bash
 systemctl enable --now frr
+systemctl restart frr
 ```
 
 ```bash
